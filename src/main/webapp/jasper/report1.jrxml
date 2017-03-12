@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report_ex_1" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c00d1522-e732-4892-a36c-18b3e6407380">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="orderHeaderId" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\03_Project_etc\\P_Ying\\Program\\SoftSquare.MFU_PBL\\src\\main\\webapp\\jasper\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT period.HYPERIODNAME, period.HYPERIODDATE
+, IFNULL(period.HYPERIODPRICE2, 0) AS HYPERIODPRICE2
+, IFNULL(period.HYPERIODPRICE3, 0) AS HYPERIODPRICE3
+, ordh.HYORDHNAME
+, ordd.HYORDDLOTTERY
+, IFNULL(ordd.HYORDDREVERSE, 0) AS HYORDDREVERSE
+, IFNULL(ordd.HYORDDTOP, 0) AS HYORDDTOP
+, IFNULL(ordd.HYORDDUNDER, 0) AS HYORDDUNDER
+, IFNULL(ordd.HYORDDREVERSE, 0)
+		+IFNULL(ordd.HYORDDTOP, 0)
+		+IFNULL(ordd.HYORDDUNDER, 0) AS sumrow
+, IFNULL(sumprice.sumtop, 0) AS sumtop
+, IFNULL(sumprice.sumreverse, 0) AS sumreverse
+, IFNULL(sumprice.sumunder, 0) AS sumunder
+, IFNULL(sumprice.sumtop+sumprice.sumreverse+sumprice.sumunder, 0) AS sumall
+, DATE_FORMAT(NOW(),'%m-%d-%Y-%T') AS curentDate
+FROM hyorderheader ordh
+JOIN hyorderdetail ordd ON (ordd.HYORDHID = ordh.HYORDHID)
+JOIN hyperiod period ON (period.HYPERIODID = ordh.HYPERIODID)
+JOIN ( SELECT SUM(IFNULL(ordd.HYORDDREVERSE, 0)) AS sumreverse
+	, SUM(IFNULL(ordd.HYORDDTOP, 0)) AS sumtop
+      	, SUM(IFNULL(ordd.HYORDDUNDER, 0)) AS sumunder
+      , ordd.HYORDHID AS did
+      FROM hyorderdetail ordd
+	  WHERE HYORDHID = $P{orderHeaderId}
+) AS sumprice ON (sumprice.did = $P{orderHeaderId})
+WHERE ordh.HYORDHID = $P{orderHeaderId}
+ORDER BY ordd.HYORDDLOTTERY ASC;]]>
+	</queryString>
+	<field name="HYPERIODNAME" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="HYPERIODDATE" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="HYPERIODPRICE2" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="HYPERIODPRICE3" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="HYORDHNAME" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="HYORDDLOTTERY" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="HYORDDREVERSE" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="HYORDDTOP" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="HYORDDUNDER" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="sumrow" class="java.math.BigDecimal"/>
+	<field name="sumtop" class="java.math.BigDecimal"/>
+	<field name="sumreverse" class="java.math.BigDecimal"/>
+	<field name="sumunder" class="java.math.BigDecimal"/>
+	<field name="sumall" class="java.math.BigDecimal"/>
+	<field name="curentDate" class="java.lang.String"/>
+	<variable name="HYORDDLOTTERY_1" class="java.lang.Integer" resetType="Column" calculation="Count">
+		<variableExpression><![CDATA[$F{HYORDDLOTTERY}]]></variableExpression>
+	</variable>
+	<variable name="CURRENT_PAGE_NUMBER" class="java.lang.String">
+		<variableExpression><![CDATA[$V{CURRENT_PAGE_NUMBER}==null ? $V{PAGE_NUMBER} : $V{PAGE_NUMBER}+1]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="87" splitType="Stretch">
+			<frame>
+				<reportElement uuid="62606d58-151b-4bc6-b1e2-3d15b308c341" x="0" y="1" width="555" height="45"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<staticText>
+					<reportElement uuid="d0e4f3f6-24d9-42d4-b084-f902fc7b25bd" x="220" y="5" width="115" height="35"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Chakra Petch" size="20" isBold="true" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[รายงานหวย]]></text>
+				</staticText>
+				<textField pattern="dd/MM/yyyy HH.mm.ss" isBlankWhenNull="true">
+					<reportElement uuid="fa965c52-bfb7-4447-aa74-5f8d40e2d4ca" x="481" y="13" width="73" height="20"/>
+					<textElement textAlignment="Right">
+						<font fontName="TH Chakra Petch" size="12" isStrikeThrough="false" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{curentDate}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="25eef767-a512-4eeb-8ff6-86857e9bc3d9" x="398" y="13" width="99" height="20"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" isBold="true" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[ออกรายงาน เวลา :]]></text>
+				</staticText>
+				<textField>
+					<reportElement uuid="7ae09e35-187c-4a59-b70a-de0253f392cd" x="467" y="0" width="80" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="TH Chakra Petch" size="12" isBold="true" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["หน้า "+$V{PAGE_NUMBER}+" /"]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Report">
+					<reportElement uuid="9a9ec60f-9278-439e-b2c0-8a85709e7281" x="545" y="0" width="9" height="13"/>
+					<textElement textAlignment="Right">
+						<font fontName="TH Chakra Petch" size="12" isBold="true" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement uuid="972a784d-041f-4159-8675-9f321e8fccbb" stretchType="RelativeToBandHeight" x="0" y="48" width="555" height="39" forecolor="#000000" backcolor="#333333"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.0" lineStyle="Solid"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid"/>
+				</box>
+				<staticText>
+					<reportElement uuid="e8517bc2-dce4-4146-b8a4-d5458de7a70f" x="5" y="3" width="35" height="20"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" isBold="true" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[ชื่องวด :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="07974e30-394e-4425-ad86-1a77a0e2124e" x="5" y="23" width="35" height="14"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" isBold="true" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[ใบสั่งที่ :]]></text>
+				</staticText>
+				<textField>
+					<reportElement uuid="e02692bc-7d74-4bac-b685-554a46a379a8" x="37" y="3" width="69" height="20"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{HYPERIODNAME}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="185ca6bc-2826-4bc0-a446-b63b9c3e2732" x="136" y="3" width="33" height="20"/>
+					<textElement>
+						<font fontName="TH Chakra Petch" size="12" isBold="true" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[งวดที่  :]]></text>
+				</staticText>
+				<textField pattern="dd/MM/yyyy">
+					<reportElement uuid="5bc48177-e5a9-4b24-b9ec-8637728de408" x="164" y="3" width="57" height="20"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{HYPERIODDATE}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="56ea17dc-f4ab-4223-aed2-893b545ba91f" x="250" y="3" width="41" height="20"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" isBold="true" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[2ตัว อั้น :]]></text>
+				</staticText>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="ba1b9dff-934d-4854-838e-0fb6ee69c312" x="286" y="3" width="36" height="20"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{HYPERIODPRICE2}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="f06f2833-c493-4de2-b4e9-ea677d97fb49" x="362" y="3" width="41" height="20"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" isBold="true" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[3ตัว อั้น :]]></text>
+				</staticText>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="cf710a7a-e867-438b-830f-af830a03b58b" x="398" y="3" width="42" height="20"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{HYPERIODPRICE3}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="14bbf19f-ce97-42ae-8616-e1a4be51a238" x="37" y="23" width="69" height="14"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{HYORDHNAME}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="fc458e5f-eb28-4038-8123-4080f1a4d932" x="128" y="23" width="41" height="14"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" isBold="true" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[รวม บน :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="3c8b04a6-5771-4e9e-9255-c15b0fbded34" x="246" y="23" width="45" height="14"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" isBold="true" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[รวม โต้ด :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="c2d71e75-9339-4c76-8f8c-354a32558209" x="358" y="23" width="45" height="14"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" isBold="true" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[รวม ล่าง :]]></text>
+				</staticText>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="37a12dd2-9dcd-4999-b72b-0e769cbc6725" x="164" y="23" width="57" height="14"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{sumtop}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="319d975d-098c-478f-a468-6e9a34d89ca8" x="286" y="23" width="49" height="14"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{sumreverse}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="ee277e48-886a-4714-a697-ea442dddf37a" x="457" y="23" width="25" height="14"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" isBold="true" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[รวม :]]></text>
+				</staticText>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="e23c123f-433e-436d-a196-3ab2ec5a6a29" x="482" y="23" width="55" height="14"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{sumall}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="6ba8eaca-e641-455c-bf77-bc2ce44c2403" x="398" y="23" width="42" height="14"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{sumunder}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="16" splitType="Stretch">
+			<frame>
+				<reportElement uuid="89911c57-1271-4b20-93f4-155360eefd54" x="0" y="0" width="555" height="16"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<staticText>
+					<reportElement uuid="258ac2b3-9448-4c14-bc0b-fcf4a869213d" x="35" y="0" width="69" height="16"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" isBold="true" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[เลข]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="311d69a9-a68a-4f2e-96fb-3b7821cea7ff" x="164" y="0" width="57" height="16"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" isBold="true" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[บน]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="0b0eda60-b26e-4e25-b40d-c6b836ea621b" x="286" y="0" width="49" height="16"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" isBold="true" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[โต้ด]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="a55c9c80-4e47-4b60-aac2-263a6bea7c4a" x="398" y="0" width="42" height="16"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" isBold="true" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[ล่าง]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="e6c3f93c-a796-4cb2-8d75-145712a6528b" x="482" y="0" width="55" height="16"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" isBold="true" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[รวม]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<frame>
+				<reportElement uuid="56e7894a-557c-4ea0-a207-2e7ba50a5b35" x="0" y="0" width="555" height="21"/>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="71834209-4e2a-418e-b333-da8473f93bba" x="164" y="1" width="57" height="20"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" isBold="false" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{HYORDDTOP}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="07106295-a089-4dad-8767-ab266d8ebd4c" x="286" y="0" width="49" height="20"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{HYORDDREVERSE}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="4e28766c-8353-4393-8946-a9119608ea2f" x="35" y="0" width="69" height="21"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{HYORDDLOTTERY}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="590e1f7a-6aca-48ba-987e-e877cc990a25" x="398" y="1" width="42" height="20"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{HYORDDUNDER}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="98b1de73-a9f2-40b4-b73f-78fa980e9824" x="482" y="0" width="55" height="20"/>
+					<textElement textAlignment="Center">
+						<font fontName="TH Chakra Petch" size="12" pdfFontName="TH Chakra Petch.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{sumrow}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="37" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
